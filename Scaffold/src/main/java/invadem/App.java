@@ -8,7 +8,7 @@ public class App extends PApplet {
     static int INVADER_NUMBER =40;
     static int spacer = 80;
     static int HITS_NUM = 0;
-    static int CONDITION = 1;
+    static int CONDITION = 0;
     static int BARRIER_BASE_X = 160;
     static int BARRIER_NUM = 3;
 
@@ -42,6 +42,7 @@ public class App extends PApplet {
 
         switch (CONDITION){
             case 0:
+
                 //show barriers
                 showBarriers();
 
@@ -77,10 +78,10 @@ public class App extends PApplet {
 
     public void keyPressed() {
         if(keyCode==LEFT){
-            tank.x_pos-=10;
+            tank.x_pos-=4;
         }
         if(keyCode==RIGHT){
-            tank.x_pos+=10;
+            tank.x_pos+=4;
         }
         if(key==' '){
             for(int i=0;i<BULLET_SIZE;i++){
@@ -122,13 +123,33 @@ public class App extends PApplet {
             image(loadImage(barriers[i].img_left),BARRIER_BASE_X*(i+1)-8,360);
             image(loadImage(barriers[i].img_top),BARRIER_BASE_X*(i+1),360);
             image(loadImage(barriers[i].img_right),BARRIER_BASE_X*(i+1)+8,360);
-            image(loadImage(barriers[i].img_solid),BARRIER_BASE_X*(i+1)-8,368);
-            image(loadImage(barriers[i].img_solid),BARRIER_BASE_X*(i+1)-8,372);
-            image(loadImage(barriers[i].img_solid),BARRIER_BASE_X*(i+1)-8,380);
-            image(loadImage(barriers[i].img_solid),BARRIER_BASE_X*(i+1)+8,368);
-            image(loadImage(barriers[i].img_solid),BARRIER_BASE_X*(i+1)+8,372);
-            image(loadImage(barriers[i].img_solid),BARRIER_BASE_X*(i+1)+8,380);
-
+            barriers[i].top_pos = 360;
+            barriers[i].bot_pos = 368;
+            barriers[i].left_pos = BARRIER_BASE_X*(i+1)-8;
+            barriers[i].right_pos = BARRIER_BASE_X*(i+1)+8;
+//
+//            Solid[]left_solid = barriers[i].left_solids;
+//            Solid[]right_solid = barriers[i].right_solids;
+//
+//            int index_l=0;
+//            for(Solid s:left_solid){
+//                image(loadImage(s.img),BARRIER_BASE_X*(i+1)-8,368+index_l*8);
+//                s.top_pos = 368+index_l*8;
+//                s.bot_pos = 368+index_l*8+8;
+//                s.left_pos = BARRIER_BASE_X*(i+1)-8;
+//                s.right_pos = BARRIER_BASE_X*(i+1);
+//                index_l++;
+//            }
+//
+//            int index_r =0;
+//            for(Solid s:right_solid){
+//                image(loadImage(s.img),BARRIER_BASE_X*(i+1)+8,368+index_r*8);
+//                s.top_pos = 368+index_r*8;
+//                s.bot_pos = 368+index_r*8+8;
+//                s.left_pos = BARRIER_BASE_X*(i+1)+8;
+//                s.right_pos = BARRIER_BASE_X*(i+1)+16;
+//                index_r++;
+//            }
         }
 
     }
@@ -189,6 +210,18 @@ public class App extends PApplet {
     }
 
     public void checkBarrierHit(){
+
+        for(Bullet bullet:bullets){
+            if(bullet.flag==1){
+                for(Barrier barrier:barriers){
+                    if(barrier.check(bullet.x_pos,bullet.y_pos)){
+                        System.out.println("here");
+                        bullet.miss=0;
+                        bullet.flag=0;
+                    }
+                }
+            }
+        }
 
     }
 
