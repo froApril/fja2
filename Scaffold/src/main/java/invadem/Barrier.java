@@ -30,18 +30,12 @@ public class Barrier {
     }
 
     public boolean check(int x, int y){
-//        System.out.println("x:"+x);
-//        System.out.println("y:"+y);
-//        System.out.println("right:"+right_pos);
-//        System.out.println("left:"+left_pos);
-
-
         boolean flag = false;
-        if(x<=right_pos && x>=left_pos && y<=top_pos+5 && y>=bot_pos-5){
-            if(x-left_pos<=8){
+        if(x<=right_pos+3 && x>=left_pos-3 && y<=top_pos+5 && y>=bot_pos-5){
+            if(x-left_pos<=7){
                flag = left_hit();
             }
-            else if(x-left_pos<14){
+            else if(x-left_pos<16){
                 flag = mid_hit();
             }
             else{

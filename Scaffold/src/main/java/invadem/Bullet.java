@@ -6,6 +6,7 @@ public class Bullet {
     public String img = "projectile.png";
     public int flag = 0;
     public int miss = 1;
+    public int shoter = 0;
     Bullet(){
 
     }
@@ -21,6 +22,7 @@ public class Bullet {
         }
         else{
             flag=0;
+            miss=1;
         }
     }
 
@@ -30,5 +32,14 @@ public class Bullet {
         this.flag=1;
     }
 
+    public void aliensShot(){
+        if(y_pos<480){
+            y_pos = y_pos+2;
+        }
+        else{
+            flag =0;
+            miss =1;
+        }
+    }
 
 }
