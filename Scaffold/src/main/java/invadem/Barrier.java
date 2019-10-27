@@ -80,5 +80,21 @@ public class Barrier {
         }
     }
 
+    public boolean AlienHitscheck(int x, int y){
+        boolean flag = false;
+        if(x<=right_pos+15 && x>=left_pos-15 && y<=top_pos && y>=bot_pos-30){
+            if(x-left_pos<=12){
+                flag = left_hit();
+            }
+            else if(x-left_pos<21){
+                flag = mid_hit();
+            }
+            else{
+                flag = right_hit();
+            }
+        }
+        return flag;
+    }
+
 
 }

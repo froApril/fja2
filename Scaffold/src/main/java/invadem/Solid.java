@@ -27,4 +27,13 @@ public class Solid {
         }
         return false;
     }
+
+    public boolean AliensHitCheck(int x, int y){
+        if(x<=right_pos+20 && x>=left_pos-20 && y<=top_pos+15 && y>=bot_pos-15){
+            System.out.println("1111");
+            Hit();
+            return true;
+        }
+        return false;
+    }
 }

@@ -305,19 +305,19 @@ public class App extends PApplet {
                     // check left destroy
                     for(Solid s:left_solid){
                         if(!s.flag){
-                            if(s.check(invader.x_pos,invader.y_pos)){
+                            if(s.AliensHitCheck(invader.x_pos,invader.y_pos)){
                                 invader.destroy=1;
                             }
                         }
                     }
                     for(Solid s:right_solid){
                         if(!s.flag){
-                                if(s.check(invader.x_pos,invader.y_pos)){
+                                if(s.AliensHitCheck(invader.x_pos,invader.y_pos)){
                                     invader.destroy=1;
                                 }
                         }
                     }
-                    if(barrier.check(invader.x_pos,invader.y_pos)){
+                    if(barrier.AlienHitscheck(invader.x_pos,invader.y_pos)){
                         invader.destroy=1;
                     }
                 }
@@ -344,7 +344,6 @@ public class App extends PApplet {
             Random random = new Random();
             int random_index = random.nextInt(40);
             Invader shoter = invaders[random_index];
-            System.out.println(shoter);
             for(Bullet bullet :bullets){
                 if(bullet.flag==0){
                     bullet.x_pos = shoter.x_pos;
