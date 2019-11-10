@@ -1,6 +1,6 @@
 package invadem;
 
-public class Barrier {
+public class Barrier implements checkAble{
 
     public String img_left = "barrier_left1.png";
     public String img_right = "barrier_right1.png";
@@ -97,4 +97,8 @@ public class Barrier {
     }
 
 
+    @Override
+    public boolean isAlive() {
+        return left_status<=3 && top_status<=3 && right_status<=3;
+    }
 }

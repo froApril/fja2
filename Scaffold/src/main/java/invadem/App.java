@@ -2,6 +2,7 @@ package invadem;
 
 import processing.core.PApplet;
 
+import java.awt.*;
 import java.util.Random;
 
 public class App extends PApplet {
@@ -216,7 +217,7 @@ public class App extends PApplet {
 
     public void showAliens(){
         for(int i=0;i<INVADER_NUMBER;i++){
-            if(invaders[i].y_pos>=470){
+            if(invaders[i].y_pos>=330){
                 ALIENS_FLAG =true;
                 break;
             }
@@ -234,6 +235,7 @@ public class App extends PApplet {
             saved_time =millis();
         }
         if(tank.crashed || ALIENS_FLAG){
+            Toolkit.getDefaultToolkit().beep();
             CONDITION =2;
             saved_time =millis();
         }
@@ -329,12 +331,16 @@ public class App extends PApplet {
     public void checkTank(){
         for(Invader invader:invaders){
             if(invader.destroy== 0){
-                tank.check(invader.x_pos,invader.y_pos);
+                if(tank.check(invader.x_pos,invader.y_pos)){
+                    invader.destroy=1;
+                }
             }
         }
         for(Bullet bullet:bullets){
-            if(bullet.shoter==1){
-                tank.check(bullet.x_pos,bullet.y_pos);
+            if(bullet.shoter==1 && bullet.flag==1){
+                if(tank.check(bullet.x_pos,bullet.y_pos)){
+                    bullet.flag=0;
+                }
             }
         }
 

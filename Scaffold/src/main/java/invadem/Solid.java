@@ -1,6 +1,6 @@
 package invadem;
 
-public class Solid {
+public class Solid implements checkAble {
     int status = 1;
     String img = "barrier_solid1.png";
     boolean flag = false;
@@ -35,5 +35,10 @@ public class Solid {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean isAlive() {
+        return status<=3;
     }
 }

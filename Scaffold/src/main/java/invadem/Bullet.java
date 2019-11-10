@@ -1,6 +1,6 @@
 package invadem;
 
-public class Bullet {
+public class Bullet implements checkAble{
     public int x_pos;
     public int y_pos;
     public String img = "projectile.png";
@@ -8,7 +8,6 @@ public class Bullet {
     public int miss = 1;
     public int shoter = 0;
     Bullet(){
-
     }
 
     Bullet(int x_pos,int y_pos){
@@ -42,4 +41,13 @@ public class Bullet {
         }
     }
 
+    /**
+     * check if the bullet is flying
+     * @return
+     */
+
+    @Override
+    public boolean isAlive() {
+       return flag==1;
+    }
 }

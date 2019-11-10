@@ -1,6 +1,6 @@
 package invadem;
 
-public class Invader {
+public class Invader implements checkAble{
 
     public String hello = "invader1.png";
     private static int LIMITATION_X = 50;
@@ -59,4 +59,8 @@ public class Invader {
 
     }
 
+    @Override
+    public boolean isAlive() {
+        return destroy==0;
+    }
 }
