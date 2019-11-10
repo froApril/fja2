@@ -29,6 +29,13 @@ public class Barrier implements checkAble{
         }
     }
 
+    /**
+     * Check if the given position contained in the barrier area
+     * @param x x position
+     * @param y y position
+     * @return boolean
+     */
+
     public boolean check(int x, int y){
         boolean flag = false;
         if(x<=right_pos+3 && x>=left_pos-3 && y<=top_pos+5 && y>=bot_pos-5){
@@ -80,6 +87,12 @@ public class Barrier implements checkAble{
         }
     }
 
+    /**
+     * Check the attack comes from Invaders
+     * @param x Projectile x position
+     * @param y Projectile y position
+     * @return
+     */
     public boolean AlienHitscheck(int x, int y){
         boolean flag = false;
         if(x<=right_pos+15 && x>=left_pos-15 && y<=top_pos && y>=bot_pos-30){

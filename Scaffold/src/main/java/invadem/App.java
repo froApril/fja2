@@ -8,7 +8,6 @@ import java.util.Random;
 public class App extends PApplet {
 
     static int BULLET_SIZE =2000;
-//    static int ALIENS_BULLETS = 1000;
     static int INVADER_NUMBER =40;
     static int spacer = 80;
     static int HITS_NUM = 0;
@@ -17,12 +16,12 @@ public class App extends PApplet {
     static int BARRIER_NUM = 3;
     static boolean ALIENS_FLAG = false;
     static int FRAME_INDEX =0;
+    static int FRAME_RATE = 100;
 
     Tank tank;
     Barrier barriers[];
     Projectile[] projectiles = new Projectile[BULLET_SIZE];
     Invader[] invaders = new Invader[INVADER_NUMBER];
-//    Bullet[] aliens_bullets = new Bullet[ALIENS_BULLETS];
     int saved_time;
 
 
@@ -35,7 +34,6 @@ public class App extends PApplet {
 
     public void setup() {
         frameRate(60);
-
     }
 
     public void settings() {
@@ -121,7 +119,16 @@ public class App extends PApplet {
         for(int i=0;i<BULLET_SIZE;i++){
             projectiles[i] = new Projectile();
         }
-        for(int i=0;i<INVADER_NUMBER;i++){
+        //Armoured Invaders
+        for(int i=0;i<10;i++){
+            invaders[i] = new ArmouredInvader();
+        }
+        //Power Invaders
+        for(int i=10;i<20;i++){
+            invaders[i] = new PowerInvader();
+        }
+        //Normal
+        for(int i=20;i<40;i++){
             invaders[i] = new Invader();
         }
 
@@ -142,7 +149,9 @@ public class App extends PApplet {
         }
     }
 
-
+    /**
+     * Set all the barriers on the screen, including the solids inside that
+     */
     public void showBarriers(){
 
         for(int i=0;i<barriers.length; i++){
@@ -179,11 +188,21 @@ public class App extends PApplet {
         }
 
     }
+
+    /**
+     * Display the tank on the screen
+     */
     public void TankDisplay(){
         if(!tank.crashed){
             image(loadImage(tank.image),tank.x_pos,tank.y_pos);
         }
     }
+
+    /**
+     * Check both Projectile and invader iteratively,
+     * if the projectile is flying and hit one of the invaders,
+     * then set them both destroyed.
+     */
 
     public void checkAliensDestoried(){
         for(Projectile b: projectiles){
@@ -200,6 +219,10 @@ public class App extends PApplet {
         }
     }
 
+    /**
+     * Display all the bullets shot out, both from tank and invaders
+     */
+
     public void showBullets(){
         for(int i=0; i<BULLET_SIZE;i++){
             if(projectiles[i].flag==1 && projectiles[i].miss==1 ){
@@ -215,6 +238,10 @@ public class App extends PApplet {
         }
     }
 
+    /**
+     * Display all the existing invaders
+     */
+
     public void showAliens(){
         for(int i=0;i<INVADER_NUMBER;i++){
             if(invaders[i].y_pos>=330){
@@ -222,12 +249,21 @@ public class App extends PApplet {
                 break;
             }
             if(invaders[i].destroy==0){
-                image(loadImage(invaders[i].hello),invaders[i].x_pos,invaders[i].y_pos);
+                System.out.println(invaders[i].getImg());
+                image(loadImage(invaders[i].getImg()),invaders[i].x_pos,invaders[i].y_pos);
                 invaders[i].move();
             }
 
         }
     }
+
+    /**
+     * This method is used for change the condition of the game
+     * if the tank is destroyed or invaders are too close, then
+     * the game is over.
+     * if all the invaders are destroyed, then it should be go to
+     * next stage.
+     */
 
     public void ConditionSwitch(){
         if(HITS_NUM==40){
@@ -241,6 +277,10 @@ public class App extends PApplet {
         }
     }
 
+    /**
+     * Display next stage image, and start next turn.
+     */
+
     public void nextStage(){
         if(millis()-saved_time < 1000){
             image(loadImage("nextlevel.png"),260,240);
@@ -248,9 +288,16 @@ public class App extends PApplet {
         else{
             CONDITION =0;
             HITS_NUM=0;
+            if(FRAME_RATE-1>=60){
+                FRAME_RATE--;
+            }
             init();
         }
     }
+
+    /**
+     * Display game over image, and start next turn.
+     */
 
     public void gameOver(){
         if(millis()-saved_time < 1000){
@@ -261,10 +308,18 @@ public class App extends PApplet {
             HITS_NUM=0;
             tank.crashed =false;
             ALIENS_FLAG= false;
+            FRAME_INDEX=0;
+            FRAME_RATE=100;
             init();
         }
     }
 
+    /**
+     * Check if any Projectile hits on barrier, using barrier functions to
+     * show the damage.
+     * Also, both tank and invaders may attack barrier, hence we need to check
+     * about that.
+     */
     public void checkBarrierHit(){
 
         for(Projectile projectile : projectiles){
@@ -292,7 +347,6 @@ public class App extends PApplet {
                     }
 
                     if(barrier.check(projectile.x_pos, projectile.y_pos)){
-                        System.out.println("here");
                         projectile.miss=0;
                         projectile.flag=0;
                     }
@@ -328,6 +382,10 @@ public class App extends PApplet {
 
     }
 
+    /**
+     * Check if tank is under attack
+     * Tank can handle three bullets.
+     */
     public void checkTank(){
         for(Invader invader:invaders){
             if(invader.destroy== 0){
@@ -345,13 +403,18 @@ public class App extends PApplet {
         }
 
     }
+
+
+    /**
+     * Randomly choose an existing invader to shot
+     */
     public void aliensShot(){
-        if(FRAME_INDEX%100==0){
+        if(FRAME_INDEX%FRAME_RATE==0){
             Random random = new Random();
             int random_index = random.nextInt(40);
             Invader shoter = invaders[random_index];
             for(Projectile projectile : projectiles){
-                if(projectile.flag==0){
+                if(projectile.flag==0 && shoter.destroy!=1){
                     projectile.x_pos = shoter.x_pos;
                     projectile.y_pos = shoter.y_pos+5;
                     projectile.flag =1;

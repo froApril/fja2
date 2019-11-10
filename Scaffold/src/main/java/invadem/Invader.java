@@ -1,19 +1,21 @@
 package invadem;
 
-public class Invader implements checkAble{
+public class Invader implements checkAble, InvaderType{
 
     public String hello = "invader1.png";
-    private static int LIMITATION_X = 50;
-    private static int LIMITATION_Y = 5;
-    private int status_x=0;
-    private int status_y=0;
+    public static int LIMITATION_X = 50;
+    public static int LIMITATION_Y = 5;
+    public int status_x=0;
+    public int status_y=0;
     public int horizontal =0;
     public int vertical =0;
     public int x_pos;
     public int y_pos;
     public int destroy=0;
 
-
+    /**
+     * Method to change every invader's position
+     */
     public void move(){
         // to right
         if(horizontal==0 && vertical==0){
@@ -62,5 +64,14 @@ public class Invader implements checkAble{
     @Override
     public boolean isAlive() {
         return destroy==0;
+    }
+
+    public String getImg(){
+        return hello;
+    }
+
+    @Override
+    public int getType() {
+        return 0;
     }
 }

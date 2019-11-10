@@ -15,8 +15,13 @@ public class Tank implements checkAble {
         this.image = image;
     }
 
+    /**
+     * Check if the tank is destroyed.
+     * @param x
+     * @param y
+     * @return
+     */
     public boolean check(int x,int y){
-        System.out.println(hit_num);
         if(hit_num<3){
             if(x<=x_pos+22 && x>=x_pos-6 && y>=y_pos-5 && y<=y_pos){
                 hit_num++;
