@@ -20,7 +20,7 @@ public class App extends PApplet {
 
     Tank tank;
     Barrier barriers[];
-    Bullet[] bullets = new Bullet[BULLET_SIZE];
+    Projectile[] projectiles = new Projectile[BULLET_SIZE];
     Invader[] invaders = new Invader[INVADER_NUMBER];
 //    Bullet[] aliens_bullets = new Bullet[ALIENS_BULLETS];
     int saved_time;
@@ -106,8 +106,8 @@ public class App extends PApplet {
         }
         if(key==' '){
             for(int i=0;i<BULLET_SIZE;i++){
-                if(bullets[i].flag==0 && bullets[i].shoter==0){
-                    bullets[i].shot(tank.x_pos,tank.y_pos);
+                if(projectiles[i].flag==0 && projectiles[i].shoter==0){
+                    projectiles[i].shot(tank.x_pos,tank.y_pos);
                     break;
                 }
             }
@@ -119,7 +119,7 @@ public class App extends PApplet {
         tank = new Tank(320,400,"tank1.png");
         barriers = new Barrier[3];
         for(int i=0;i<BULLET_SIZE;i++){
-            bullets[i] = new Bullet();
+            projectiles[i] = new Projectile();
         }
         for(int i=0;i<INVADER_NUMBER;i++){
             invaders[i] = new Invader();
@@ -186,7 +186,7 @@ public class App extends PApplet {
     }
 
     public void checkAliensDestoried(){
-        for(Bullet b: bullets){
+        for(Projectile b: projectiles){
             for(Invader invader: invaders){
                 if(b.miss==1 && invader.destroy==0 && b.shoter==0){
                     if((b.x_pos<= invader.x_pos+10 && b.x_pos>=invader.x_pos-10)
@@ -202,14 +202,14 @@ public class App extends PApplet {
 
     public void showBullets(){
         for(int i=0; i<BULLET_SIZE;i++){
-            if(bullets[i].flag==1 && bullets[i].miss==1 ){
-                if(bullets[i].shoter==0){
-                    image(loadImage(bullets[i].img),bullets[i].x_pos,bullets[i].y_pos);
-                    bullets[i].fly();
+            if(projectiles[i].flag==1 && projectiles[i].miss==1 ){
+                if(projectiles[i].shoter==0){
+                    image(loadImage(projectiles[i].img), projectiles[i].x_pos, projectiles[i].y_pos);
+                    projectiles[i].fly();
                 }
                 else{
-                    image(loadImage(bullets[i].img),bullets[i].x_pos,bullets[i].y_pos);
-                    bullets[i].aliensShot();
+                    image(loadImage(projectiles[i].img), projectiles[i].x_pos, projectiles[i].y_pos);
+                    projectiles[i].aliensShot();
                 }
             }
         }
@@ -267,8 +267,8 @@ public class App extends PApplet {
 
     public void checkBarrierHit(){
 
-        for(Bullet bullet:bullets){
-            if(bullet.flag==1){
+        for(Projectile projectile : projectiles){
+            if(projectile.flag==1){
                 for(Barrier barrier:barriers){
                     Solid[] left_solid = barrier.left_solids;
                     Solid[] right_solid = barrier.right_solids;
@@ -276,25 +276,25 @@ public class App extends PApplet {
                     // check left destroy
                     for(Solid s:left_solid){
                         if(!s.flag){
-                            if(s.check(bullet.x_pos,bullet.y_pos)){
-                                bullet.miss=0;
-                                bullet.flag=0;
+                            if(s.check(projectile.x_pos, projectile.y_pos)){
+                                projectile.miss=0;
+                                projectile.flag=0;
                             }
                         }
                     }
                     for(Solid s:right_solid){
                         if(!s.flag){
-                            if(s.check(bullet.x_pos,bullet.y_pos)){
-                                bullet.miss=0;
-                                bullet.flag=0;
+                            if(s.check(projectile.x_pos, projectile.y_pos)){
+                                projectile.miss=0;
+                                projectile.flag=0;
                             }
                         }
                     }
 
-                    if(barrier.check(bullet.x_pos,bullet.y_pos)){
+                    if(barrier.check(projectile.x_pos, projectile.y_pos)){
                         System.out.println("here");
-                        bullet.miss=0;
-                        bullet.flag=0;
+                        projectile.miss=0;
+                        projectile.flag=0;
                     }
                 }
             }
@@ -336,10 +336,10 @@ public class App extends PApplet {
                 }
             }
         }
-        for(Bullet bullet:bullets){
-            if(bullet.shoter==1 && bullet.flag==1){
-                if(tank.check(bullet.x_pos,bullet.y_pos)){
-                    bullet.flag=0;
+        for(Projectile projectile : projectiles){
+            if(projectile.shoter==1 && projectile.flag==1){
+                if(tank.check(projectile.x_pos, projectile.y_pos)){
+                    projectile.flag=0;
                 }
             }
         }
@@ -350,13 +350,13 @@ public class App extends PApplet {
             Random random = new Random();
             int random_index = random.nextInt(40);
             Invader shoter = invaders[random_index];
-            for(Bullet bullet :bullets){
-                if(bullet.flag==0){
-                    bullet.x_pos = shoter.x_pos;
-                    bullet.y_pos = shoter.y_pos+5;
-                    bullet.flag =1;
-                    bullet.shoter =1;
-                    bullet.aliensShot();
+            for(Projectile projectile : projectiles){
+                if(projectile.flag==0){
+                    projectile.x_pos = shoter.x_pos;
+                    projectile.y_pos = shoter.y_pos+5;
+                    projectile.flag =1;
+                    projectile.shoter =1;
+                    projectile.aliensShot();
                     break;
                 }
             }
