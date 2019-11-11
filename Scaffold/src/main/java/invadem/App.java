@@ -8,6 +8,7 @@ import java.util.Random;
 public class App extends PApplet {
 
     static int BULLET_SIZE =2000;
+    static int POWER_BULLET_SIZE = 100;
     static int INVADER_NUMBER =40;
     static int spacer = 80;
     static int HITS_NUM = 0;
@@ -21,6 +22,7 @@ public class App extends PApplet {
     Tank tank;
     Barrier barriers[];
     Projectile[] projectiles = new Projectile[BULLET_SIZE];
+    PowerProjectile[] powerProjectiles = new PowerProjectile[POWER_BULLET_SIZE];
     Invader[] invaders = new Invader[INVADER_NUMBER];
     int saved_time;
 
@@ -116,8 +118,13 @@ public class App extends PApplet {
     public void init(){
         tank = new Tank(320,400,"tank1.png");
         barriers = new Barrier[3];
+        //normal bullet
         for(int i=0;i<BULLET_SIZE;i++){
             projectiles[i] = new Projectile();
+        }
+        //Power bullet
+        for(int i=0; i< POWER_BULLET_SIZE;i++){
+            powerProjectiles[i]= new PowerProjectile();
         }
         //Armoured Invaders
         for(int i=0;i<10;i++){
@@ -236,6 +243,13 @@ public class App extends PApplet {
                 }
             }
         }
+
+        for(int i=0;i<POWER_BULLET_SIZE;i++){
+            if(powerProjectiles[i].flag==1){
+                image(loadImage(powerProjectiles[i].getImg()),powerProjectiles[i].x_pos,powerProjectiles[i].y_pos);
+                powerProjectiles[i].aliensShot();
+            }
+        }
     }
 
     /**
@@ -249,7 +263,6 @@ public class App extends PApplet {
                 break;
             }
             if(invaders[i].destroy==0){
-                System.out.println(invaders[i].getImg());
                 image(loadImage(invaders[i].getImg()),invaders[i].x_pos,invaders[i].y_pos);
                 invaders[i].move();
             }
@@ -387,6 +400,7 @@ public class App extends PApplet {
      * Tank can handle three bullets.
      */
     public void checkTank(){
+        //Crashed by aliens (not be used, but )
         for(Invader invader:invaders){
             if(invader.destroy== 0){
                 if(tank.check(invader.x_pos,invader.y_pos)){
@@ -402,6 +416,7 @@ public class App extends PApplet {
             }
         }
 
+
     }
 
 
@@ -413,20 +428,32 @@ public class App extends PApplet {
             Random random = new Random();
             int random_index = random.nextInt(40);
             Invader shoter = invaders[random_index];
-            for(Projectile projectile : projectiles){
-                if(projectile.flag==0 && shoter.destroy!=1){
-                    projectile.x_pos = shoter.x_pos;
-                    projectile.y_pos = shoter.y_pos+5;
-                    projectile.flag =1;
-                    projectile.shoter =1;
-                    projectile.aliensShot();
-                    break;
+            if(shoter.getType()==2){
+                System.out.println("here");
+                for(PowerProjectile powerProjectile: powerProjectiles){
+                    if(powerProjectile.flag==0 && shoter.destroy!=1){
+                        powerProjectile.x_pos = shoter.x_pos;
+                        powerProjectile.y_pos = shoter.y_pos+5;
+                        powerProjectile.flag =1;
+                        powerProjectile.aliensShot();
+                        break;
+                    }
+                }
+            }
+            else{
+                for(Projectile projectile : projectiles){
+                    if(projectile.flag==0 && shoter.destroy!=1){
+                        projectile.x_pos = shoter.x_pos;
+                        projectile.y_pos = shoter.y_pos+5;
+                        projectile.flag =1;
+                        projectile.shoter =1;
+                        projectile.aliensShot();
+                        break;
+                    }
                 }
             }
         }
     }
-
-
 
     public static void main(String[] args) {
         PApplet.main("invadem.App");
