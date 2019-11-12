@@ -87,6 +87,39 @@ public class Barrier implements checkAble{
         }
     }
 
+    public boolean checkPowerBullet(int x, int y){
+        if(x<=right_pos+3 && x>=left_pos-3 && y<=top_pos+5 && y>=bot_pos-5){
+            if(x-left_pos<=7){
+                if(left_status<=3){
+                    left_status = 4;
+                    img_left = "empty.png";
+                    return true;
+                }
+                return false;
+
+            }
+            else if(x-left_pos<16){
+                if(top_status<=3){
+                    top_status = 4;
+                    img_top = "empty.png";
+                    return true;
+                }
+                return false;
+            }
+            else{
+                if(right_status<=3){
+                    right_status = 4;
+                    img_top = "empty.png";
+                    return true;
+                }
+                return false;
+            }
+        }
+        return false;
+    }
+
+
+
     /**
      * Check the attack comes from Invaders
      * @param x Projectile x position

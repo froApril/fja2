@@ -34,6 +34,15 @@ public class Tank implements checkAble {
         return crashed;
     }
 
+    public boolean checkPowerProjectile(int x, int y){
+        if(x<=x_pos+22 && x>=x_pos-6 && y>=y_pos-5 && y<=y_pos){
+            crashed = true;
+            return true;
+        }
+        return false;
+    }
+
+
     @Override
     public boolean isAlive() {
         return !crashed;

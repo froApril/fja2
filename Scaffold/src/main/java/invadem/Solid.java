@@ -36,6 +36,21 @@ public class Solid implements checkAble {
         return false;
     }
 
+    public boolean CheckPowerBullet(int x, int y){
+        if(x<=right_pos && x>=left_pos && y<=top_pos+5 && y>=bot_pos-5){
+            PowerHit();
+            return true;
+        }
+        return false;
+    }
+
+    public void PowerHit(){
+        status = 4;
+        flag = true;
+        img = "empty.png";
+    }
+
+
     @Override
     public boolean isAlive() {
         return status<=3;

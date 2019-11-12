@@ -1,6 +1,7 @@
 package invadem;
 
 import processing.core.PApplet;
+import processing.core.PFont;
 
 import java.awt.*;
 import java.util.Random;
@@ -19,6 +20,8 @@ public class App extends PApplet {
     static int FRAME_INDEX =0;
     static int FRAME_RATE = 100;
 
+    PFont pFont;
+    ScoreBoard scoreBoard;
     Tank tank;
     Barrier barriers[];
     Projectile[] projectiles = new Projectile[BULLET_SIZE];
@@ -34,8 +37,13 @@ public class App extends PApplet {
         init();
     }
 
+    /**
+     * Setup the game environment
+     */
     public void setup() {
         frameRate(60);
+        pFont = createFont("PressStart2P-Regular.tff",32);
+        scoreBoard = new ScoreBoard();
     }
 
     public void settings() {
@@ -45,10 +53,14 @@ public class App extends PApplet {
     public void draw() {
         //Main Game Loop
         background(0);
+        textFont(pFont);
         FRAME_INDEX++;
 
         switch (CONDITION){
             case 0:
+
+                //show score
+                showScoreBoard();
 
                 // aliens shot
                 aliensShot();
@@ -154,6 +166,9 @@ public class App extends PApplet {
         for(int i=0;i<BARRIER_NUM;i++){
             barriers[i] = new Barrier();
         }
+
+
+
     }
 
     /**
@@ -219,6 +234,19 @@ public class App extends PApplet {
                             && (b.y_pos<= invader.y_pos+5 && b.y_pos>=invader.y_pos-1)){
                         b.miss =0;
                         invader.destroy =1;
+                        int invaderType = invader.getType();
+                        if(invaderType==0){
+                            scoreBoard.normalInvader();
+                            scoreBoard.updateHighest();
+                        }
+                        if(invaderType==1){
+                            scoreBoard.armouredInvader();
+                            scoreBoard.updateHighest();
+                        }
+                        if(invaderType==2){
+                            scoreBoard.powerInvader();
+                            scoreBoard.updateHighest();
+                        }
                         HITS_NUM++;
                     }
                 }
@@ -285,6 +313,7 @@ public class App extends PApplet {
         }
         if(tank.crashed || ALIENS_FLAG){
             Toolkit.getDefaultToolkit().beep();
+            scoreBoard.score=0;
             CONDITION =2;
             saved_time =millis();
         }
@@ -366,28 +395,34 @@ public class App extends PApplet {
                 }
             }
         }
-        for(Invader invader:invaders){
-            if(invader.destroy==0){
+
+        for(PowerProjectile powerProjectile : powerProjectiles){
+            if(powerProjectile.flag==1){
                 for(Barrier barrier:barriers){
                     Solid[] left_solid = barrier.left_solids;
                     Solid[] right_solid = barrier.right_solids;
+
                     // check left destroy
                     for(Solid s:left_solid){
                         if(!s.flag){
-                            if(s.AliensHitCheck(invader.x_pos,invader.y_pos)){
-                                invader.destroy=1;
+                            if(s.CheckPowerBullet(powerProjectile.x_pos, powerProjectile.y_pos)){
+                                powerProjectile.miss=0;
+                                powerProjectile.flag=0;
                             }
                         }
                     }
                     for(Solid s:right_solid){
                         if(!s.flag){
-                                if(s.AliensHitCheck(invader.x_pos,invader.y_pos)){
-                                    invader.destroy=1;
-                                }
+                            if(s.CheckPowerBullet(powerProjectile.x_pos, powerProjectile.y_pos)){
+                                powerProjectile.miss=0;
+                                powerProjectile.flag=0;
+                            }
                         }
                     }
-                    if(barrier.AlienHitscheck(invader.x_pos,invader.y_pos)){
-                        invader.destroy=1;
+
+                    if(barrier.checkPowerBullet(powerProjectile.x_pos, powerProjectile.y_pos)){
+                        powerProjectile.miss=0;
+                        powerProjectile.flag=0;
                     }
                 }
             }
@@ -408,6 +443,7 @@ public class App extends PApplet {
                 }
             }
         }
+        // check the normal bullet
         for(Projectile projectile : projectiles){
             if(projectile.shoter==1 && projectile.flag==1){
                 if(tank.check(projectile.x_pos, projectile.y_pos)){
@@ -415,6 +451,15 @@ public class App extends PApplet {
                 }
             }
         }
+        // check the power bullet
+        for(PowerProjectile powerProjectile: powerProjectiles){
+            if(powerProjectile.flag==1){
+                if(tank.checkPowerProjectile(powerProjectile.x_pos,powerProjectile.y_pos)){
+                    powerProjectile.flag=0;
+                }
+            }
+        }
+
 
 
     }
@@ -429,7 +474,6 @@ public class App extends PApplet {
             int random_index = random.nextInt(40);
             Invader shoter = invaders[random_index];
             if(shoter.getType()==2){
-                System.out.println("here");
                 for(PowerProjectile powerProjectile: powerProjectiles){
                     if(powerProjectile.flag==0 && shoter.destroy!=1){
                         powerProjectile.x_pos = shoter.x_pos;
@@ -454,6 +498,16 @@ public class App extends PApplet {
             }
         }
     }
+
+    /**
+     * Display the score of the board
+     */
+
+    public void showScoreBoard(){
+        text(scoreBoard.score,10,30);
+        text(scoreBoard.highest_score,530,30);
+    }
+
 
     public static void main(String[] args) {
         PApplet.main("invadem.App");
